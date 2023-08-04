@@ -1,4 +1,8 @@
 {
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  },
   "timeZone": "Asia/Tokyo",
   "dependencies": {},
   "exceptionLogging": "STACKDRIVER",
