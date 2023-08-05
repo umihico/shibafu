@@ -1,0 +1,21 @@
+name: Track Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened # debug
+      - synchronize # debug
+      - closed
+
+jobs:
+  track-pull-request:
+    runs-on: ubuntu-latest
+    # if: github.event.pull_request.merged == true
+    steps:
+      - run: |
+          gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} > pull_request.json
+          curl -H "Content-Type: application/json" -d @pull_request.json -L "https://script.google.com/macros/s/${{ secrets.PROD_DEPLOYMENT_ID }}/exec"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
