@@ -16,3 +16,12 @@
 import { hello } from './example-module';
 
 console.log(hello());
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const doGet = (e: GoogleAppsScript.Events.DoGet) => {
+  console.log(e.parameter);
+  const response = JSON.stringify({ hello: 'world' });
+  return ContentService.createTextOutput(response).setMimeType(
+    ContentService.MimeType.JSON
+  );
+};
