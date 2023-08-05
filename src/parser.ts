@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { parseRawData } from './parser';
 import { PullRequestResponseSchema } from './types/response';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const doPost = (e: GoogleAppsScript.Events.DoPost) => {
-  const rawData = JSON.parse(e.postData.contents) as PullRequestResponseSchema;
-  const { data, row } = parseRawData(rawData);
-  const sheet = SpreadsheetApp.getActiveSpreadsheet()
-    .getSheets()
-    .find(sheet => sheet.getName() === 'All');
-
-  sheet!.appendRow(row);
-
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
-    ContentService.MimeType.JSON
-  );
+export const parseRawData = (rawData: PullRequestResponseSchema) => {
+  const data = {
+    repo: rawData.head.repo?.name,
+    user: rawData.user.login,
+    url: rawData.html_url,
+    mergedAt: rawData.merged_at,
+    title: rawData.title,
+    commitCount: rawData.commits,
+    changedFiles: rawData.changed_files,
+    additions: rawData.additions,
+    deletions: rawData.deletions,
+  };
+  const row = [
+    data.mergedAt,
+    data.repo,
+    data.user,
+    data.title,
+    data.url,
+    data.commitCount,
+    data.changedFiles,
+    data.additions,
+    data.deletions,
+  ].map(value => String(value));
+  return { data, row };
 };
