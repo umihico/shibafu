@@ -32,3 +32,16 @@ npm run deploy && curl -H "Content-Type: application/json" -d $PULL -L "https://
 # Deploy prod & Run with demo data
 npm run deploy:prod && curl -H "Content-Type: application/json" -d $PULL -L "https://script.google.com/macros/s/$PROD_DEPLOYMENT_ID/exec"
 ```
+
+## To get all past pull requests per repository
+
+```bash
+# gh pr list --base development --limit 10000 --state merged --json number | jq "[. | sort_by(.number) | .[].number] | join(\" \")"
+array=( 1 2 3 4 5 )
+for i in "${array[@]}"
+do
+  gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" repos/umihico/hoge/pulls/${i} > pull_request.json
+  curl -H "Content-Type: application/json" -d @pull_request.json -L "https://script.google.com/macros/s/${DEPLOYMENT_ID}/exec"
+  sleep 1
+done
+```
